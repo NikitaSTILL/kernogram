@@ -18,7 +18,7 @@ var getIdTele = function () {
                 break;
             }
         }
-        console.log(idtele);
+        //console.log(idtele);
         orderNum(idtele);
     });
 };
