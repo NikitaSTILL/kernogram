@@ -1,4 +1,6 @@
 # kernogram
 Используются библиотеки:
-request
-robotjs
+
+- request
+
+- robotjs
