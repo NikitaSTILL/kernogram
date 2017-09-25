@@ -5,6 +5,7 @@ var telephone = "errstandart";
 var vereficationCode = "errstandart";
 var apikey = "8a5c7acd85e37a86a40247c9650c17c25a52da81";
 var idtele;
+var vereID;
 
 var names = ["Dima" , "Kolya", "Abarm", "August", "Agey", "Bazhen", "Borey", "Vadim", "Vlas", "Gleb", "Georgy", "Demid", "Denis", "Efim"];
 var surnames = ["Onegin", "Karelin", "Bunin", "Tolstoy", "Pushkin", "Gavr", "Chehov", "Lopin", "Repin", "Donatello"];
@@ -60,42 +61,18 @@ var orderNum = function (idx) { // заказывает номер
             console.log("id " + contentss.id);
             robot.moveMouse(width/2+100, height-140);
             robot.mouseClick();
+            vereID = contentss.id;
             getCode(contentss.id);
         }, 2000);
         }
         else{
             console.log(contentss.message);
         }
-        // for(var j = 0; j == 0; ){
-        //     if(parseInt(contentss.send) > 0){
-        //
-        //         j = 1;
-        //     }
-        // }
     });
 };
 
 var getCode = function (idact) { // получает код
     var URL = 'https://sms-acktiwator.ru/api/getlatestcode/' + apikey + '?id=' + idact;
-    // request(URL, function (errk, resk, body) {
-    // if (errk) throw err;
-    //     console.log("2" + body);
-    //     console.log("url " + URL);
-    //     // var contentsk = JSON.parse(bodyk);
-    //     vereficationCode = body;
-    //     console.log("code " + body);
-    //     setTimeout(function () {
-    //         robot.moveMouse(width/2+100, height-140);
-    //         robot.mouseClick();
-    //         setTimeout(function () {
-    //             robot.moveMouse(width/2, height-70);
-    //             robot.mouseClick();
-    //             robot.typeString(vereficationCode);
-    //             robot.moveMouse(width/2, height+100);
-    //             robot.mouseClick();
-    //         }, 4000)
-    //     }, 1000);
-    // });
     console.log(URL);
     var rte = setInterval(function () {
         request(URL, function (errk, resk, bodymdn) {
@@ -163,7 +140,23 @@ var setetCode = function (bdy) {
     }, 1000);
 };
 
-getIdTele();
+var getActiveCode = function (vereff) {
+    var URL = 'https://sms-acktiwator.ru/api/getlatestcode/' + apikey + '?id=' + vereff;
+    var rts = setInterval(function () {
+        request(URL, function (errk, resk, bodymdn) {
+            if (errk) throw err;
+            if(bodymdn != ""){
+                return bodymdn;
+                clearInterval(rts);
+            }
+            else {
+                console.log("none");
+            }
+        });
+    }, 5000);
+};
+
+// getIdTele();
 
 /*
  1{"id":267017,"number":"+79771020453","send":0}
@@ -174,5 +167,6 @@ getIdTele();
 */
 
 module.exports.tel = telephone;
-module.exports.verefi = vereficationCode;
-// module.exports.buyNum = buyNum;
+module.exports.vereID = vereID;
+module.exports.getIdTele = getIdTele;
+module.exports.getActiveCode = getActiveCode;

@@ -1,7 +1,13 @@
 var buyTel = require('./codeBuy');
 
+buyTel.getIdTele();
+
 /*
-buyTel.tel - телефон
-buyTel.verefi - код
-это переменные в которых будет храниться номер и код верефикации, тип string
+    buyTel.tel - телефон
+    buyTel.vereID - id автивации
 */
+
+var sqrID = buyTel.vereID;
+
+var endcode = buyTel.getActiveCode(sqrID); // код для авторизации, для реги - ДРУГОЙ!!!(он приватный)
+
