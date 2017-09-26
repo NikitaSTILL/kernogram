@@ -1,5 +1,5 @@
 var buyTel = require('./codeBuy');
-
+var tgManipulator = require('/.tg_manipulator');
 buyTel.getIdTele();
 
 /*
@@ -9,5 +9,6 @@ buyTel.getIdTele();
 
 var sqrID = buyTel.vereID;
 
-var endcode = buyTel.getActiveCode(sqrID); // код для авторизации, для реги - ДРУГОЙ!!!(он приватный)
-
+var endcode = buyTel.getActiveCode(sqrID);
+console.log(endcode);// код для авторизации, для реги - ДРУГОЙ!!!(он приватный)
+tgManipulator.main(telephone, code); //для одного телефонного номера - 10 приглашений

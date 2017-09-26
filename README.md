@@ -3,4 +3,8 @@
 
 - request
 
-- robotjs
+- robotjst
+
+- phantomjs
+
+- node-horseman
