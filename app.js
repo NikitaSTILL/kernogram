@@ -10,5 +10,4 @@ buyTel.getIdTele();
 var sqrID = buyTel.vereID;
 
 var endcode = buyTel.getActiveCode(sqrID);
-console.log(endcode);// код для авторизации, для реги - ДРУГОЙ!!!(он приватный)
-tgManipulator.main(telephone, code); //для одного телефонного номера - 10 приглашений
+tgManipulator.main(buyTel.tel, endcode); //для одного телефонного номера - 10 приглашений
