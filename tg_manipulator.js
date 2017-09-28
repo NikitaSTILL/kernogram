@@ -52,12 +52,12 @@ function loginToTg() {
         .wait(1000).screenshot('screen.png').click('i').wait(2000).click(next_btn)
         .catch(function (error) {console.log('err: suppose ' + login + ' has been logged'); type2(); throw error;} )
         .wait(3000).screenshot('screen2.png').log('logging in...').wait(1000).log('1').then(
-            function (value) {return q.fcall( function () {q.fcall(function () {code = cB.getActiveCode(id); console.log('get code ' + code)})},
-                function (reason) {throw reason})
-        .type(form_code, code).screenshot('screen7.png').log('2').wait(1000).log('3')
+            function (value) {return q.fcall( function () {code = cB.getActiveCode(id); console.log('code ' + code)})}, function (reason) {throw reason})
+        .type(form_code, code).screenshot('screen7.png').log(code + ' - code').wait(1000).log(code + ' - code')
         .then(function (value) {console.log('4'); return type2();},
             function (reason) {console.log('err while login');});
 }
+
 
 function enterChat() {
     console.log('entering chat: ')
