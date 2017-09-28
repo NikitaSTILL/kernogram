@@ -47,9 +47,9 @@ function loginToTg() {
         .open(site).log().wait(4000).screenshot('screen.png').type(form_login, login)
         .click('i').wait(2000).click(next_btn)
         .catch(function (error) {console.log('err: suppose ' + login + ' has been logged'); type2(); throw error;} )
-        .wait(3000).screenshot('screen2.png').log('logging in...').wait(1000)
-        .type(form_code, code).wait(1000)
-        .then(function (value) {return type2();},
+        .wait(3000).screenshot('screen2.png').log('logging in...').wait(1000).log('1')
+        .type(form_code, code).log('2').wait(1000).log('3')
+        .then(function (value) {console.log('4'); return type2();},
             function (reason) {console.log('err while login');});
 }
 
