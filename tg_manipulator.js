@@ -46,9 +46,9 @@ var counter = 0;
 function loginToTg() {
     console.log('logging with login ' + login + ' and code ' + code + ': ');
     return horseman.userAgent(agent)
-        .open(site).log().wait(4000).screenshot('screen.png').type(form_login, login)
+        .open(site).log().wait(4000).type(form_login, login)
         .select('body > div.page_wrap > div > div.login_page > div.login_form_wrap > form > div.login_phone_groups_wrap.clearfix > div.md-input-group.login_phone_code_input_group.md-input-has-value.md-input-animated > input', '+7')
-        .click('i').wait(2000).click(next_btn)
+        .wait(1000).screenshot('screen.png').click('i').wait(2000).click(next_btn)
         .catch(function (error) {console.log('err: suppose ' + login + ' has been logged'); type2(); throw error;} )
         .wait(3000).screenshot('screen2.png').log('logging in...').wait(1000).log('1').then(
             function (value) {code = cB.getActiveCode(id); return value}, function (reason) {throw reason})
