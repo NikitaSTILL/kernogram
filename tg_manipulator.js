@@ -12,9 +12,9 @@ const rl = readline.createInterface({
 
 var array = fs.readFileSync('file.txt').toString().split("\n");
 
-var login = '9038665132';
+var login;
 var id = '';
-var code = '48081';
+var code;
 
 const screen_path = 'screen.png';
 
