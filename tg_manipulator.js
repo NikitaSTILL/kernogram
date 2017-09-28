@@ -105,11 +105,12 @@ function type1() {
 }
 
 function type2(){
+    console.log('5');
     horseman.open('https://www.google.com/').then(function (value) {
-        console.log('5');
+        console.log('6');
         return enterChat();
     }, function (reason) {
-        console.log('6');
+        console.log('7');
         return enterChat();
     });
 }
