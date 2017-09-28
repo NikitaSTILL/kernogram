@@ -48,7 +48,7 @@ function loginToTg() {
         .click('i').wait(2000).click(next_btn)
         .catch(function (error) {console.log('err: suppose ' + login + ' has been logged'); type2(); throw error;} )
         .wait(3000).screenshot('screen2.png').log('logging in...').wait(1000).log('1')
-        .type(form_code, code).log('2').wait(1000).log('3')
+        .type(form_code, code).screenshot('screen3.png').log('2').wait(1000).log('3')
         .then(function (value) {console.log('4'); return type2();},
             function (reason) {console.log('err while login');});
 }
@@ -97,7 +97,7 @@ function end() {
 }
 
 function type1() {
-    horseman.open('https://www.google.com/').then(function (value) {
+     horseman.open('https://www.google.com/').then(function (value) {
         return logout();
     }, function (reason) {
         return logout();
@@ -106,8 +106,10 @@ function type1() {
 
 function type2(){
     horseman.open('https://www.google.com/').then(function (value) {
+        console.log('5');
         return enterChat();
     }, function (reason) {
+        console.log('6');
         return enterChat();
     });
 }
