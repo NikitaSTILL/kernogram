@@ -9,5 +9,4 @@ buyTel.getIdTele();
 
 var sqrID = buyTel.vereID;
 
-var endcode = buyTel.getActiveCode(sqrID);
-tgManipulator.main(buyTel.tel, endcode); //для одного телефонного номера - 10 приглашений
+tgManipulator.main(buyTel.tel, sqrID); //для одного телефонного номера - 10 приглашений
