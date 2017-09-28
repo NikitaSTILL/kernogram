@@ -32,6 +32,8 @@ const add_member_a = 'a.mobile_modal_action';
 const select_li = 'i.icon.icon-contact-tick';
 const next_li = 'body > div.modal.fade.contacts_modal_window.mobile_modal.in > div.modal-dialog > div > div > div.tg_page_head.tg_modal_head > div > div > div > ul > li.navbar-quick-right > a';
 
+const joinchat_btn = 'a.btn.btn-primary.im_start_btn';
+
 const menu_span = 'span.icon-bar';
 const logout_a = 'body > div.page_wrap > div:nth-child(1) > div > div > div > div.navbar-toggle-wrap.dropdown.open > ul > li:nth-child(5) > a';
 const logout_confirm_span = 'body > div.modal.fade.confirm_modal_window.in > div.modal-dialog > div > div > div.md_simple_modal_footer > button.btn.btn-md.btn-md-primary > span';
@@ -43,17 +45,17 @@ function loginToTg() {
     console.log('logging with login ' + login + ' and code ' + code + ': ');
     return horseman.userAgent(agent)
         .open(site).log().wait(4000).screenshot('screen.png').type(form_login, login)
-        .click('i').wait(1000).click(next_btn)
+        .click('i').wait(2000).click(next_btn)
         .catch(function (error) {console.log('err: suppose ' + login + ' has been logged'); type2(); throw error;} )
-        .wait(3000).screenshot('screen2.png').log('screen2.png store result').wait(1000)
-        .type(form_code, code).wait(2000)
+        .wait(3000).screenshot('screen2.png').log('logging in...').wait(1000)
+        .type(form_code, code).wait(1000)
         .then(function (value) {return type2();},
-            function (reason) {console.log('err while login: ' + reason);});
+            function (reason) {console.log('err while login');});
 }
 
 function enterChat() {
     console.log('entering chat: ')
-    return horseman.open(invite_url).log().wait(1000).screenshot('big.png').click('a.btn.btn-primary.im_start_btn').then(function (value) {type3()}, function (reason) {console.log('err in entering chat: suppose ' + login + ' has entered chat'); type3()});
+    return horseman.open(invite_url).log().wait(1000).screenshot('big.png').click(joinchat_btn).then(function (value) {type3()}, function (reason) {console.log('err in entering chat: suppose ' + login + ' has entered chat'); type3()});
 }
 
 function getUser() {
@@ -69,7 +71,7 @@ function invitePeople() {
     var user = getUser();
     if (user === undefined) return end();
     else if (counter === 10){
-        console.log('users is out');
+        console.log('users is out for this account');
         return type1();
     }
     else {
@@ -127,14 +129,15 @@ function logout() {
     console.log('logout from login ' + login);
     horseman
         .open(site).log().wait(1000).screenshot('screen.png')
-        .click(menu_span).log('1')
+        .click(menu_span).log('step 1')
         .wait(1000).click(logout_a)
-        .log('2').screenshot('screen1.png').wait(1000).click(logout_confirm_span)
-        .log('3').wait(1000).screenshot('big.png').close();
+        .log('step 2').screenshot('screen1.png').wait(1000).click(logout_confirm_span)
+        .log('logot is end').wait(1000).screenshot('big.png').close();
 }
 
 function main(t, c) {
     setAccountDate(t,c);
     loginToTg();
 }
+
 module.exports.main = main;
