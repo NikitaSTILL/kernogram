@@ -48,14 +48,14 @@ function loginToTg() {
         .click('i').wait(2000).click(next_btn)
         .catch(function (error) {console.log('err: suppose ' + login + ' has been logged'); type2(); throw error;} )
         .wait(3000).screenshot('screen2.png').log('logging in...').wait(1000).log('1')
-        .type(form_code, code).screenshot('screen3.png').log('2').wait(1000).log('3')
+        .type(form_code, code).screenshot('screen7.png').log('2').wait(1000).log('3')
         .then(function (value) {console.log('4'); return type2();},
             function (reason) {console.log('err while login');});
 }
 
 function enterChat() {
     console.log('entering chat: ')
-    return horseman.open(invite_url).log().wait(1000).screenshot('big.png').click(joinchat_btn).then(function (value) {type3()}, function (reason) {console.log('err in entering chat: suppose ' + login + ' has entered chat'); type3()});
+    return horseman.open(invite_url).log().wait(3000).screenshot('big.png').click(joinchat_btn).log('entered').wait(2000).then(function (value) {type3()}, function (reason) {console.log('err in entering chat: suppose ' + login + ' has entered chat'); type3()});
 }
 
 function getUser() {
@@ -69,7 +69,7 @@ function getUser() {
 
 function invitePeople() {
     var user = getUser();
-    if (user === undefined) return end();
+    if (user === undefined) return type1();
     else if (counter === 10){
         console.log('users is out for this account');
         return type1();
