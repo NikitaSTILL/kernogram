@@ -1,11 +1,13 @@
 var request = require('request');
 var robot = require("robotjs");
+var tgManipulator = require('./tg_manipulator');
 
 var telephone = "errstandart";
 var vereficationCode = "errstandart";
 var apikey = "8a5c7acd85e37a86a40247c9650c17c25a52da81";
 var idtele;
 var vereID;
+var laterCode;
 
 var names = ["Dima" , "Kolya", "Abarm", "August", "Agey", "Bazhen", "Borey", "Vadim", "Vlas", "Gleb", "Georgy", "Demid", "Denis", "Efim"];
 var surnames = ["Onegin", "Karelin", "Bunin", "Tolstoy", "Pushkin", "Gavr", "Chehov", "Lopin", "Repin", "Donatello"];
@@ -45,7 +47,7 @@ var orderNum = function (idx) { // заказывает номер
         if (errs) throw err;
         console.log("1" + bodyb);
         var contentss = JSON.parse(bodyb);
-        if(typeof contentss.name !== "undefined" && contentss.name != "error"){
+        //if(typeof contentss.name != "undefined" && contentss.name != "error"){
 
 
         telephone = contentss.number;
@@ -64,10 +66,10 @@ var orderNum = function (idx) { // заказывает номер
             vereID = contentss.id;
             getCode(contentss.id);
         }, 2000);
-        }
-        else{
-            console.log(contentss.message);
-        }
+        //}
+        // else{
+        //     console.log(contentss.message);
+        // }
     });
 };
 
@@ -97,16 +99,19 @@ var setetCode = function (bdy) {
             robot.moveMouse(width/2, height-70);
             robot.mouseClick();
             robot.typeString(bdy);
+            laterCode = bdy;
             robot.moveMouse(width/2, height+100);
             robot.mouseClick();
+            var namess = getRandom(0, names.length-2);
+            var surnamess = getRandom(0, surnames.length-2);
             setTimeout(function () {
                 robot.moveMouse(width/2, height-70);
                 robot.mouseClick();
-                robot.typeString(names[getRandom(0, names.length-1)]);
+                robot.typeString(names[namess]);
 
                 robot.moveMouse(width/2, height);
                 robot.mouseClick();
-                robot.typeString(surnames[getRandom(0, surnames.length-1)]);
+                robot.typeString(surnames[surnamess]);
 
                 robot.moveMouse(width/2, height+100);
                 robot.mouseClick();
@@ -133,10 +138,14 @@ var setetCode = function (bdy) {
                     setTimeout(function () {
                         robot.moveMouse(width/1.7, height+40);
                         robot.mouseClick();
+                        setTimeout(function () {
+                            tgManipulator.main(telephone.replace('+7', ''), vereID);
+                            getActiveCode(vereID);
+                        },1000);
                     },2000);
                 }, 2000);
-            }, 1000)
-        }, 1000)
+            }, 2000);
+        }, 1000);
     }, 1000);
 };
 
@@ -145,18 +154,19 @@ var getActiveCode = function (vereff) {
     var rts = setInterval(function () {
         request(URL, function (errk, resk, bodymdn) {
             if (errk) throw err;
-            if(bodymdn != ""){
-                return bodymdn;
+            if(bodymdn != "" && bodymdn != laterCode){
+                console.log('new code ' + bodymdn);
                 clearInterval(rts);
+                return bodymdn;
             }
             else {
-                console.log("none");
+                console.log("none - wait");
             }
         });
-    }, 5000);
+    }, 1000);
 };
 
-// getIdTele();
+//getIdTele();
 
 /*
  1{"id":267017,"number":"+79771020453","send":0}
