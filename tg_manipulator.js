@@ -14,7 +14,7 @@ const rl = readline.createInterface({
 var array = fs.readFileSync('file.txt').toString().split("\n");
 
 var login;
-var id = '';
+var id;
 var code;
 
 const screen_path = 'screen.png';
@@ -49,7 +49,7 @@ function loginToTg() {
     return horseman.userAgent(agent)
         .open(site).log().wait(4000).type(form_login, login)
         .select('body > div.page_wrap > div > div.login_page > div.login_form_wrap > form > div.login_phone_groups_wrap.clearfix > div.md-input-group.login_phone_code_input_group.md-input-has-value.md-input-animated > input', '+7')
-        .wait(1000).screenshot('screen.png').click('i').wait(2000).click(next_btn)
+        .wait(1000).screenshot('screen.png').log('setting the number').click('i').wait(2000).click(next_btn).log('getting code')
         .catch(function (error) {console.log('err: suppose ' + login + ' has been logged'); type2(); throw error;} )
         .wait(3000).screenshot('screen2.png').log('logging in...').wait(1000).log('1').then(
             function (value) {return q.fcall( function () {code = cB.getActiveCode(id); console.log('code ' + code)})}, function (reason) {throw reason})
