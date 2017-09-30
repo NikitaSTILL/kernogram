@@ -1,5 +1,6 @@
 var request = require('request');
 var robot = require("robotjs");
+var fs = require("fs");
 var tgManipulator = require('./tg_manipulator');
 
 var telephone = "errstandart", vereficationCode = "errstandart";
@@ -21,6 +22,13 @@ robot.setMouseDelay(2);
 /* --------------------------------------
             Set help functions
  -------------------------------------- */
+
+function getApiKey() {
+    var defg = fs.readFileSync("web-int/config.cfg", "utf8");
+    console.log(typeof defg);
+    return fs.readFileSync("web-int/config.cfg", "utf8");
+}
+
 function getRandom(min, max)
 {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -34,7 +42,6 @@ function getNowTime() {
 /* --------------------------------------
                 Work alcohol
  -------------------------------------- */
-
 var getIdTele = function () { // функция для взятия id сервиса (telegram)
     if(apikey != ""){
         var URL = 'https://sms-acktiwator.ru/api/getservices/' + apikey;
@@ -63,7 +70,7 @@ var orderNum = function (idx) { // заказывает номер
         if (errs) throw err;
         console.log(getNowTime() + " Ответ заказа номера: " + bodyb);
         var contentss = JSON.parse(bodyb);
-        if(typeof contentss.name != "undefined" && contentss.name != "error"){
+
             telephone = contentss.number;
             console.log(getNowTime() + " tel " + telephone);
 
@@ -80,10 +87,7 @@ var orderNum = function (idx) { // заказывает номер
                 vereID = contentss.id;
                 getCode(contentss.id);
             }, 2000);
-        }
-        else{
-            console.log(getNowTime() + " Возникла ошибка: " + contentss.message);
-        }
+
     });
 };
 
@@ -138,25 +142,59 @@ var setetCode = function (bdy) {
                         robot.mouseClick();
                     },500);
                     setTimeout(function () {
-                        robot.moveMouse(width/1.46, height/2);
-                        robot.mouseToggle("down");
-                        robot.dragMouse(0, 1000);
-                        robot.mouseToggle("up");
+                        var hegmeg = 1.001;
+                        vv = height/2;
+                        for(var i = 0; i == 0; ){
+                            // console.log(hegmeg+=0.001);
+                            robot.moveMouse(width/hegmeg, vv);
+                            if(robot.getPixelColor(width/hegmeg, vv) == "a2a5a7"){
+                                i = 1;
+                                console.log(width/hegmeg + " " + vv);
+                                robot.mouseToggle("down");
+                                robot.dragMouse(0, 1000);
+                                robot.mouseToggle("up");
+
+                                vk = height*1.77;
+                                hegmeg = 1.001;
+                                setTimeout(function () {
+                                    for(var i = 0; i == 0; ){
+                                        robot.moveMouse(width/hegmeg, vk);
+                                        if(robot.getPixelColor(width/hegmeg, vk) == "3ac6c3"){
+                                            i = 1;
+                                            console.log(width/hegmeg + " " + vk);
+                                            robot.moveMouse(width/hegmeg, vk);
+                                            robot.mouseClick();
+                                            vk = height+40;
+                                            hegmeg = 1.001;
+                                            setTimeout(function () {
+                                                for(var i = 0; i == 0; ){
+                                                    robot.moveMouse(width/hegmeg, vk);
+                                                    if(robot.getPixelColor(width/hegmeg, vk) == "3e3336"){
+                                                        i = 1;
+                                                        console.log(width/hegmeg + " " + vk);
+                                                        robot.moveMouse(width/hegmeg, vk);
+                                                        robot.mouseClick();
+                                                    }
+                                                    else{
+                                                        //console.log(hegmeg + " " + robot.getPixelColor(width/hegmeg, vk));
+                                                        hegmeg+=0.05;
+                                                    }
+                                                }
+                                            },1500);
+                                        }
+                                        else{
+                                            //console.log(hegmeg + " " + robot.getPixelColor(width/hegmeg, vk));
+                                            hegmeg+=0.05;
+                                        }
+                                    }
+                                },1500);
+                            }
+                            else{
+                                //console.log(hegmeg + " " + robot.getPixelColor(width/hegmeg, vv));
+                                hegmeg+=0.001;
+                            }
+                        }
                     }, 1000);
-
-                    setTimeout(function () {
-                        robot.moveMouse(width/2.7, height*1.77);
-                        robot.mouseClick();
-                    },1500);
-
-                    setTimeout(function () {
-                        robot.moveMouse(width/1.7, height+40);
-                        robot.mouseClick();
-                        setTimeout(function () {
-                            tgManipulator.main(telephone.replace('+7', ''), vereID);
-                            getActiveCode(vereID);
-                        },1000);
-                    },2000);
                 }, 2000);
             }, 2000);
         }, 1000);
@@ -190,3 +228,4 @@ module.exports.tel = telephone;
 module.exports.vereID = vereID;
 module.exports.getIdTele = getIdTele;
 module.exports.getActiveCode = getActiveCode;
+module.exports.getApiKey = getApiKey;
