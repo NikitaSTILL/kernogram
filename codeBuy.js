@@ -3,10 +3,13 @@ var robot = require("robotjs");
 var tgManipulator = require('./tg_manipulator');
 
 var telephone = "errstandart", vereficationCode = "errstandart";
-var apikey = "8a5c7acd85e37a86a40247c9650c17c25a52da81";
+
+var conf = fs.readFileSync("web-int/config.cfg", "utf8");
+var apikey = conf;
+
 var idtele, vereID, laterCode;
 
-var names = ["Dima" , "Kolya", "Abarm", "August", "Agey", "Bazhen", "Borey", "Vadim", "Vlas", "Gleb", "Georgy", "Demid", "Denis", "Efim"];
+var names = ["Dima" , "Kolya", "Abarm", "August", "Agey", "Bazhen", "Borey", "Vadim", "Vlas", "Gleb", "Georgy", "Demid", "Denis", "Efim", "David", "Nikita"];
 var surnames = ["Onegin", "Karelin", "Bunin", "Tolstoy", "Pushkin", "Gavr", "Chehov", "Lopin", "Repin", "Donatello"];
 
 var screenSize = robot.getScreenSize();
@@ -15,6 +18,9 @@ var width = screenSize.width;
 
 robot.setMouseDelay(2);
 
+/* --------------------------------------
+            Set help functions
+ -------------------------------------- */
 function getRandom(min, max)
 {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -24,6 +30,10 @@ function getNowTime() {
     var now = new Date();
     return now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 }
+
+/* --------------------------------------
+                Work alcohol
+ -------------------------------------- */
 
 var getIdTele = function () { // функция для взятия id сервиса (telegram)
     if(apikey != ""){
@@ -153,6 +163,9 @@ var setetCode = function (bdy) {
     }, 1000);
 };
 
+/* --------------------------------------
+             Outer alcohol
+ -------------------------------------- */
 var getActiveCode = function (vereff) {
     var URL = 'https://sms-acktiwator.ru/api/getlatestcode/' + apikey + '?id=' + vereff;
     var rts = setInterval(function () {
@@ -170,6 +183,9 @@ var getActiveCode = function (vereff) {
     }, 1000);
 };
 
+/* --------------------------------------
+     Export functions and variable
+ -------------------------------------- */
 module.exports.tel = telephone;
 module.exports.vereID = vereID;
 module.exports.getIdTele = getIdTele;
