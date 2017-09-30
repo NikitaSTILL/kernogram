@@ -1,8 +1,9 @@
 var express = require('express');
+var util = require('util');
 var app = express();
 var q = express('q');
 var fs = require('fs');
-var cB = require('./codeBuy');
+var cB = require('codeBuy');
 var Horseman = require('node-horseman');
 var horseman = new Horseman();
 const readline = require('readline');
@@ -11,7 +12,9 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-var array = fs.readFileSync('file.txt').toString().split("\n");
+const filepath = './web-int/file.txt';
+
+var array = fs.readFileSync(filepath).toString().split("\n");
 
 var login;
 var id;
@@ -23,7 +26,7 @@ const agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) ' +
     'Gecko/20100101 Firefox/27.0';
 const site = 'https://web.telegram.org/#/login';
 const site_group = 'https://web.telegram.org/#/im?p=g229561679';
-
+const setTimeoutPromise = util.promisify(setTimeout);
 const form_login = 'form [name="phone_number"]';
 const form_code = 'form [name="phone_code"]';
 const next_btn = 'button.btn.btn-md.btn-md-primary';
@@ -52,7 +55,7 @@ function loginToTg() {
         .wait(1000).screenshot('screen.png').log('setting the number').click('i').wait(2000).click(next_btn).log('getting code')
         .catch(function (error) {console.log('err: suppose ' + login + ' has been logged'); type2(); throw error;} )
         .wait(3000).screenshot('screen2.png').log('logging in...').wait(1000).log('1').then(
-            function (value) {return q.fcall( function () {code = cB.getActiveCode(id); console.log('code r:' + code)})}, function (reason) {throw reason})
+            function (value) {code = cB.getActiveCode(id); return setTimeoutPromise(4000, '').then(catchCode)}, function (reason) {throw reason})
         .type(form_code, code).screenshot('screen7.png').log(code + ' - code').wait(1000).log(code + ' - code')
         .then(function (value) {console.log('4'); return type2();},
             function (reason) {console.log('err while login');});
@@ -73,10 +76,18 @@ function getUser() {
     return user;
 }
 
+function catchCode() {
+    if (code === undefined) {
+        console.log('code is underfined, continue catching');
+        return setTimeoutPromise(4000, '').then(catchCode);
+    }
+    else return console.log('code has been caught - ' + code);
+}
+
 function invitePeople() {
     var user = getUser();
     if (user === undefined) return type1();
-    else if (counter === 10){
+    else if (counter === 50){
         console.log('users is out for this account');
         return type1();
     }
