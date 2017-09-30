@@ -2,12 +2,9 @@ var request = require('request');
 var robot = require("robotjs");
 var tgManipulator = require('./tg_manipulator');
 
-var telephone = "errstandart";
-var vereficationCode = "errstandart";
+var telephone = "errstandart", vereficationCode = "errstandart";
 var apikey = "8a5c7acd85e37a86a40247c9650c17c25a52da81";
-var idtele;
-var vereID;
-var laterCode;
+var idtele, vereID, laterCode;
 
 var names = ["Dima" , "Kolya", "Abarm", "August", "Agey", "Bazhen", "Borey", "Vadim", "Vlas", "Gleb", "Georgy", "Demid", "Denis", "Efim"];
 var surnames = ["Onegin", "Karelin", "Bunin", "Tolstoy", "Pushkin", "Gavr", "Chehov", "Lopin", "Repin", "Donatello"];
@@ -23,59 +20,66 @@ function getRandom(min, max)
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getNowTime() {
+    var now = new Date();
+    return now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+}
+
 var getIdTele = function () { // функция для взятия id сервиса (telegram)
-    var URL = 'https://sms-acktiwator.ru/api/getservices/' + apikey;
-    request(URL, function (err, res, body) {
-        if (err) throw err;
-        var contents = JSON.parse(body);
-        for(var i = 0; i < contents.length; i++){
-            if(contents[i].name == "telegram"){
-                idtele = contents[i].id;
-                break;
+    if(apikey != ""){
+        var URL = 'https://sms-acktiwator.ru/api/getservices/' + apikey;
+        request(URL, function (err, res, body) {
+            if (err) throw err;
+            var contents = JSON.parse(body);
+            for(var i = 0; i < contents.length; i++){
+                if(contents[i].name == "telegram"){
+                    idtele = contents[i].id;
+                    break;
+                }
             }
-        }
-        //console.log(idtele);
-        robot.moveMouse(width/2, height+120);
-        robot.mouseClick();
-        orderNum(idtele);
-    });
+            robot.moveMouse(width/2, height+120);
+            robot.mouseClick();
+            orderNum(idtele);
+        });
+    }
+    else{
+        console.log(getNowTime() + " Нет API ключа");
+    }
 };
 
 var orderNum = function (idx) { // заказывает номер
     var URL = 'https://sms-acktiwator.ru/api/getnumber/' + apikey + '?id=' + idx;
     request(URL, function (errs, ress, bodyb) {
         if (errs) throw err;
-        console.log("1" + bodyb);
+        console.log(getNowTime() + " Ответ заказа номера: " + bodyb);
         var contentss = JSON.parse(bodyb);
-        //if(typeof contentss.name != "undefined" && contentss.name != "error"){
+        if(typeof contentss.name != "undefined" && contentss.name != "error"){
+            telephone = contentss.number;
+            console.log(getNowTime() + " tel " + telephone);
 
-
-        telephone = contentss.number;
-        console.log("tel " + telephone);
-
-        robot.moveMouse(width/2, height);
-        robot.mouseClick();
-        robot.typeString(telephone.replace('+7', ''));
-        robot.moveMouse(width/2, height+100);
-        robot.mouseClick();
-
-        setTimeout(function () {
-            console.log("id " + contentss.id);
-            robot.moveMouse(width/2+100, height-140);
+            robot.moveMouse(width/2, height);
             robot.mouseClick();
-            vereID = contentss.id;
-            getCode(contentss.id);
-        }, 2000);
-        //}
-        // else{
-        //     console.log(contentss.message);
-        // }
+            robot.typeString(telephone.replace('+7', ''));
+            robot.moveMouse(width/2, height+100);
+            robot.mouseClick();
+
+            setTimeout(function () {
+                console.log(getNowTime() + " id " + contentss.id);
+                robot.moveMouse(width/2+100, height-140);
+                robot.mouseClick();
+                vereID = contentss.id;
+                getCode(contentss.id);
+            }, 2000);
+        }
+        else{
+            console.log(getNowTime() + " Возникла ошибка: " + contentss.message);
+        }
     });
 };
 
 var getCode = function (idact) { // получает код
     var URL = 'https://sms-acktiwator.ru/api/getlatestcode/' + apikey + '?id=' + idact;
-    console.log(URL);
+    console.log(getNowTime() + " " + URL);
     var rte = setInterval(function () {
         request(URL, function (errk, resk, bodymdn) {
             if (errk) throw err;
@@ -84,7 +88,7 @@ var getCode = function (idact) { // получает код
                 clearInterval(rte);
             }
             else {
-                console.log("none");
+                console.log(getNowTime() + " no code");
             }
         });
     }, 5000);
@@ -92,7 +96,7 @@ var getCode = function (idact) { // получает код
 
 var setetCode = function (bdy) {
     vereficationCode = bdy;
-    console.log("code " + bdy);
+    console.log(getNowTime() + " code " + bdy);
 
     setTimeout(function () {
         setTimeout(function () {
@@ -155,26 +159,16 @@ var getActiveCode = function (vereff) {
         request(URL, function (errk, resk, bodymdn) {
             if (errk) throw err;
             if(bodymdn != "" && bodymdn != laterCode){
-                console.log('new code ' + bodymdn);
+                console.log(getNowTime() + " new code " + bodymdn);
                 clearInterval(rts);
                 return bodymdn;
             }
             else {
-                console.log("none - wait");
+                console.log(getNowTime() + " no code; getActiveCode function;");
             }
         });
     }, 1000);
 };
-
-//getIdTele();
-
-/*
- 1{"id":267017,"number":"+79771020453","send":0}
- tel +79771020453
- id 267017
- 2{"name":"error","message":"Сервис не найден","code":400,"status":200,"type":"app\\helpers\\apiException"}
- codeundefined
-*/
 
 module.exports.tel = telephone;
 module.exports.vereID = vereID;
